@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width">
+    <title>Verificar RUT Chileno</title>
+    <meta name="description" content="Ejemplo para ver funcionamiento de la funcion RUT.verificar">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Ejemplo para ver funcionamiento de la funcion RUT.verificar()</h1>
+      <form action=".">
+        <p>
+          <input type="text" name="rut" id="id_rut">
+        </p>
+        <p>
+          <button type="submit">¿Valida?</button>
+        </p>
+      </form>
+    </div>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="verificar-rut.js"></script>
+    <script>
+      (function(){
+        "use strict";
+        var $id_rut = $("#id_rut");
+        $id_rut.on('change',function(e){
+          RUT.verificar(this);
+          if ($(this).hasClass('input-error')) {
+            alert("Rut no válido...");
+          }
+        });
+        $("form").on("submit", function(e){
+          e.preventDefault();
+          if ("" === $id_rut.val()) {
+            alert("Ingrese un RUT para validar");
+          } else {
+            RUT.verificar($id_rut);
+            if ($id_rut.hasClass('input-error')) {
+              alert("Rut no válido...");
+            } else {
+              alert("Rut válido!");
+            }
+          }
+        });
+      }());
+    </script>
+  </body>
+</html>
