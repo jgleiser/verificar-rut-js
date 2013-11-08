@@ -16,36 +16,60 @@
           <input type="text" name="rut" id="id_rut">
         </p>
         <p>
-          <button type="submit">¿Valida?</button>
+          <button type="button" id="checkButton">¿Valida?</button>
         </p>
       </form>
     </div>
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="verificar-rut.js"></script>
     <script>
       (function(){
         "use strict";
-        var $id_rut = $("#id_rut");
-        $id_rut.on('change',function(e){
-          RUT.verificar(this);
-          if ($(this).hasClass('input-error')) {
-            alert("Rut no válido...");
-          }
-        });
-        $("form").on("submit", function(e){
-          e.preventDefault();
-          if ("" === $id_rut.val()) {
-            alert("Ingrese un RUT para validar");
-          } else {
-            RUT.verificar($id_rut);
-            if ($id_rut.hasClass('input-error')) {
-              alert("Rut no válido...");
-            } else {
-              alert("Rut válido!");
+
+        var rut_input = document.getElementById('id_rut'),
+            checkButton = document.getElementById('checkButton');
+
+        /** cross-browser add event listener from 
+         *  http://stackoverflow.com/questions/6348494/addeventlistener-vs-onclick
+         */
+        var addEvent = function addEvent(element, evnt, funct) {
+          if (element.attachEvent) return element.attachEvent('on' + evnt, funct);
+          else return element.addEventListener(evnt, funct, false);
+        }
+
+        addEvent(rut_input, 'change', function() {
+          if (!this.value.length) {
+            if (-1 !== this.className.indexOf('input-error')) {
+              this.className = this.className.replace(/(\s)?input-error/, '')
             }
+          } else if (!RUT.verificar(this)) {
+            if (-1 === this.className.indexOf('input-error')) {
+              this.className += ' input-error';
+            }
+            this.focus();
+            alert('Rut no válido... :(');
+          } else if (-1 !== this.className.indexOf('input-error')) {
+            this.className = this.className.replace(/(\s)?input-error/, '');
           }
         });
+
+        addEvent(checkButton, 'click', function() {
+          if (!rut_input.value.length) {
+            alert('Ingrese un RUT para validar');
+          } else if (RUT.verificar(rut_input)) {
+            if (-1 !== rut_input.className.indexOf('input-error')) {
+              rut_input.className = rut_input.className.replace(/(\s)?input-error/, '');
+            }
+            alert('Rut válido! :)');
+          } else {
+            if (-1 === rut_input.className.indexOf('input-error')) {
+              rut_input.className += ' input-error';
+            }
+            rut_input.focus();
+            alert('Rut no válido... :(');
+          }
+        });
+
       }());
     </script>
   </body>
